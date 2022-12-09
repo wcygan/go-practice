@@ -6,7 +6,6 @@ Practicing Data Structures, Algorithms, Concurrency, and more in [Go](https://go
 
 - **[Build and Run](#build-and-run)**<br>
 - **[References](#references)**<br>
-- **[Contributing](#contributing)**<br>
 
 ## Build and Run
 
