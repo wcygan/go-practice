@@ -3,6 +3,7 @@ package main
 import "time"
 import "math/rand"
 
+// `go run vote.go`
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
