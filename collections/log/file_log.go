@@ -16,7 +16,7 @@ type FileLog struct {
 }
 
 func NewFileLog(path string) (*FileLog, error) {
-	file, err := os.Create(path)
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
 		return nil, err
 	}
@@ -71,40 +71,42 @@ func (fl *FileLog) Append(record []byte) (offset uint64, err error) {
 	return offset, nil
 }
 
-func (fl *FileLog) Read(offset uint64) (record []byte, err error) {
+func (fl *FileLog) Read(offset uint64) (record []byte, nextOffset uint64, err error) {
 	// Seek to the offset.
 	_, err = fl.file.Seek(int64(offset), io.SeekStart)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	// Read the length of the record.
 	var lenRecord uint64
 	err = binary.Read(fl.file, binary.BigEndian, &lenRecord)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	// Read the record.
 	record = make([]byte, lenRecord)
 	_, err = io.ReadFull(fl.file, record)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	// Read the checksum.
 	var checksum uint32
 	err = binary.Read(fl.file, binary.BigEndian, &checksum)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	// Verify the checksum.
 	if crc32.ChecksumIEEE(record) != checksum {
-		return nil, errors.New("data corruption detected")
+		return nil, 0, errors.New("data corruption detected")
 	}
 
-	return record, nil
+	// Return the record and the next offset.
+	nextOffset = offset + 8 + lenRecord + 4
+	return record, nextOffset, nil
 }
 
 func (fl *FileLog) Close() error {

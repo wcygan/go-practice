@@ -24,9 +24,7 @@ func CreateFileLog(t *testing.T) (*FileLog, func()) {
 }
 
 func TestHappyPath(t *testing.T) {
-	// Create a new FileLog and a cleanup function.
 	log, cleanup := CreateFileLog(t)
-	// Ensure that cleanup is called when the test returns.
 	defer cleanup()
 
 	// Append a record to the log.
@@ -37,7 +35,7 @@ func TestHappyPath(t *testing.T) {
 	}
 
 	// Read the record back from the log.
-	got, err := log.Read(offset)
+	got, _, err := log.Read(offset)
 	if err != nil {
 		t.Fatalf("cannot read record: %v", err)
 	}
@@ -61,7 +59,7 @@ func TestReadReturnsCorrectData(t *testing.T) {
 		t.Fatalf("cannot append record: %v", err)
 	}
 
-	readRecord, err := log.Read(offset)
+	readRecord, _, err := log.Read(offset)
 	if err != nil {
 		t.Fatalf("cannot read record: %v", err)
 	}
@@ -106,7 +104,7 @@ func TestReadAfterCloseReturnsError(t *testing.T) {
 		t.Errorf("cannot close log: %v", err)
 	}
 
-	_, err := log.Read(0)
+	_, _, err := log.Read(0)
 	if err == nil {
 		t.Errorf("Read after Close did not return an error")
 	}
@@ -116,7 +114,7 @@ func TestReadWithInvalidOffsetReturnsError(t *testing.T) {
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 
-	_, err := log.Read(12345)
+	_, _, err := log.Read(12345)
 	if err == nil {
 		t.Errorf("Read with invalid offset did not return an error")
 	}
@@ -137,14 +135,50 @@ func TestReadAtInvalidOffsets(t *testing.T) {
 	}
 
 	// Try to read at an offset one behind a proper offset.
-	_, err = log.Read(offset - 1)
+	_, _, err = log.Read(offset - 1)
 	if err == nil {
 		t.Errorf("Read at offset one behind did not return an error")
 	}
 
 	// Try to read at an offset one ahead a proper offset.
-	_, err = log.Read(offset + 1)
+	_, _, err = log.Read(offset + 1)
 	if err == nil {
 		t.Errorf("Read at offset one ahead did not return an error")
+	}
+}
+
+func TestMultipleEntries(t *testing.T) {
+	log, cleanup := CreateFileLog(t)
+	defer cleanup()
+
+	// Append multiple records to the log.
+	records := [][]byte{
+		[]byte("hello, world"),
+		[]byte("goodbye, world"),
+		[]byte("another record"),
+	}
+
+	offsets := make([]uint64, len(records))
+	for i, record := range records {
+		var err error
+		offsets[i], err = log.Append(record)
+		if err != nil {
+			t.Fatalf("cannot append record: %v", err)
+		}
+	}
+
+	// Read the records back from the log.
+	for i, offset := range offsets {
+		got, nextOffset, err := log.Read(offset)
+		if err != nil {
+			t.Fatalf("cannot read record: %v", err)
+		}
+		if string(got) != string(records[i]) {
+			t.Errorf("got %q, want %q", got, records[i])
+		}
+		// If this is not the last record, check that the next offset matches the offset of the next record.
+		if i < len(records)-1 && nextOffset != offsets[i+1] {
+			t.Errorf("next offset got %v, want %v", nextOffset, offsets[i+1])
+		}
 	}
 }
