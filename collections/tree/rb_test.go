@@ -188,3 +188,18 @@ func TestRedBlackTree_Height(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestRedBlackTree_SizeAfterInsertAndDelete(t *testing.T) {
+	tree := NewRedBlackTree[int, int]()
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+	if tree.Size() != 3 {
+		t.Errorf("Size() after insert = %v, want %v", tree.Size(), 3)
+	}
+	tree.Delete(1)
+	tree.Delete(2)
+	if tree.Size() != 1 {
+		t.Errorf("Size() after delete = %v, want %v", tree.Size(), 1)
+	}
+}
