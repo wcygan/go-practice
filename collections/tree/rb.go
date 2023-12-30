@@ -2,6 +2,7 @@ package tree
 
 import (
 	"cmp"
+	"practice/collections"
 )
 
 // RedBlackTree is a red-black tree data structure.
@@ -44,6 +45,7 @@ func (t *RedBlackTree[K, V]) IsEmpty() bool {
 	return t.Size() == 0
 }
 
+// Minimum returns the key-value pair with the minimum key.
 func (t *RedBlackTree[K, V]) Minimum() (*K, *V) {
 	minimum := t.root.minimum(t.nil)
 
@@ -67,6 +69,7 @@ func (n *RedBlackNode[K, V]) minimum(nilNode *RedBlackNode[K, V]) *RedBlackNode[
 	return x
 }
 
+// Maximum returns the key-value pair with the maximum key.
 func (t *RedBlackTree[K, V]) Maximum() (*K, *V) {
 	maximum := t.root.maximum(t.nil)
 
@@ -90,6 +93,7 @@ func (n *RedBlackNode[K, V]) maximum(nilNode *RedBlackNode[K, V]) *RedBlackNode[
 	return x
 }
 
+// Height returns the height of the tree.
 func (t *RedBlackTree[K, V]) Height() int {
 	return t.root.height(t.nil)
 }
@@ -134,6 +138,9 @@ func (t *RedBlackTree[K, V]) Search(key K) (*V, bool) {
 	return nil, false
 }
 
+// Insert inserts a key-value pair into the tree (only if the key does not already exist).
+// True is returned if the key is inserted.
+// False is returned if the key already exists.
 func (t *RedBlackTree[K, V]) Insert(key K, value V) bool {
 	z := &RedBlackNode[K, V]{
 		key:   key,
@@ -248,6 +255,9 @@ func (t *RedBlackTree[K, V]) rotateRight(x *RedBlackNode[K, V]) {
 	x.parent = y
 }
 
+// Delete removes a key from the tree (if it exists).
+// True is returned if the key is deleted.
+// False is returned if the key does not exist.
 func (t *RedBlackTree[K, V]) Delete(key K) bool {
 	// Find the node to delete
 	z := t.root
@@ -373,4 +383,32 @@ func (t *RedBlackTree[K, V]) transplant(u, v *RedBlackNode[K, V]) {
 	}
 
 	v.parent = u.parent
+}
+
+// Range returns all the key-value pairs whose keys are in the range [low, high].
+func (t *RedBlackTree[K, V]) Range(low K, high K) []collections.Pair[K, V] {
+	var result []collections.Pair[K, V]
+	t.root.rangeHelper(low, high, t.nil, &result)
+	return result
+}
+
+func (x *RedBlackNode[K, V]) rangeHelper(low K, high K, nilNode *RedBlackNode[K, V], result *[]collections.Pair[K, V]) {
+	if x == nilNode {
+		return
+	}
+
+	if x.key >= low {
+		// Check the left subtree
+		x.left.rangeHelper(low, high, nilNode, result)
+	}
+
+	if x.key >= low && x.key <= high {
+		// Add the current node to the result since it's within the range
+		*result = append(*result, collections.Pair[K, V]{Key: x.key, Value: x.value})
+	}
+
+	if x.key <= high {
+		// Check the right subtree
+		x.right.rangeHelper(low, high, nilNode, result)
+	}
 }

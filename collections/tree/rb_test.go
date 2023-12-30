@@ -203,3 +203,48 @@ func TestRedBlackTree_SizeAfterInsertAndDelete(t *testing.T) {
 		t.Errorf("Size() after delete = %v, want %v", tree.Size(), 1)
 	}
 }
+
+func TestRedBlackTree_Range(t *testing.T) {
+	tree := NewRedBlackTree[int, int]()
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+	tree.Insert(4, 400)
+	tree.Insert(5, 500)
+
+	pairs := tree.Range(2, 4)
+	if len(pairs) != 3 {
+		t.Errorf("Range() = %v, want %v", len(pairs), 3)
+	}
+	if pairs[0].Key != 2 || pairs[0].Value != 200 {
+		t.Errorf("Range() = %v, %v, want %v, %v", pairs[0].Key, pairs[0].Value, 2, 200)
+	}
+	if pairs[1].Key != 3 || pairs[1].Value != 300 {
+		t.Errorf("Range() = %v, %v, want %v, %v", pairs[1].Key, pairs[1].Value, 3, 300)
+	}
+	if pairs[2].Key != 4 || pairs[2].Value != 400 {
+		t.Errorf("Range() = %v, %v, want %v, %v", pairs[2].Key, pairs[2].Value, 4, 400)
+	}
+}
+
+func TestRedBlackTree_RangeEmptyTree(t *testing.T) {
+	tree := NewRedBlackTree[int, int]()
+	pairs := tree.Range(1, 5)
+	if len(pairs) != 0 {
+		t.Errorf("Range() = %v, want %v", len(pairs), 0)
+	}
+}
+
+func TestRedBlackTree_RangeOutsideBounds(t *testing.T) {
+	tree := NewRedBlackTree[int, int]()
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+	tree.Insert(4, 400)
+	tree.Insert(5, 500)
+
+	pairs := tree.Range(6, 10)
+	if len(pairs) != 0 {
+		t.Errorf("Range() = %v, want %v", len(pairs), 0)
+	}
+}
