@@ -30,6 +30,9 @@ const (
 
 func NewRedBlackTree[K cmp.Ordered, V any]() *RedBlackTree[K, V] {
 	nilNode := &RedBlackNode[K, V]{color: BLACK}
+	nilNode.left = nilNode
+	nilNode.right = nilNode
+	nilNode.parent = nilNode
 
 	return &RedBlackTree[K, V]{
 		nil:  nilNode,
@@ -121,7 +124,7 @@ func (t *RedBlackTree[K, V]) Search(key K) (*V, bool) {
 
 	// Traverse the tree
 	x := t.root
-	for x != nil {
+	for x != t.nil {
 		if key == x.key {
 			// Match is found
 			return &x.value, true

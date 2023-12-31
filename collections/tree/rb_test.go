@@ -299,3 +299,119 @@ func TestRedBlackTree_EntriesAreSorted(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestRedBlackTree_DeleteFixup_1(t *testing.T) {
+	// Test 1: Delete a node from an empty tree
+	tree := NewRedBlackTree[int, int]()
+	deleted := tree.Delete(1)
+	if deleted {
+		t.Errorf("Delete() = %v, want %v", deleted, false)
+	}
+
+	// Test 2: Delete a node that does not exist in the tree
+	tree.Insert(1, 100)
+	deleted = tree.Delete(2)
+	if deleted {
+		t.Errorf("Delete() = %v, want %v", deleted, false)
+	}
+
+	// Test 3: Delete a node that exists in the tree
+	deleted = tree.Delete(1)
+	if !deleted || tree.Size() != 0 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 0)
+	}
+
+	// Test 4: Delete a node from a tree with multiple nodes
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+	deleted = tree.Delete(2)
+	if !deleted || tree.Size() != 2 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 2)
+	}
+
+	// Test 5: Delete a node that causes a color flip in deleteFixup
+	tree.Insert(4, 400)
+	tree.Insert(5, 500)
+	deleted = tree.Delete(3)
+	if !deleted || tree.Size() != 3 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 3)
+	}
+
+	// Test 6: Delete a node that causes a rotation in deleteFixup
+	deleted = tree.Delete(1)
+	if !deleted || tree.Size() != 2 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 2)
+	}
+
+	// Test 7: Delete a node that causes a color flip and rotation in deleteFixup
+	tree.Insert(1, 100)
+	tree.Insert(3, 300)
+	deleted = tree.Delete(4)
+	if !deleted || tree.Size() != 3 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 3)
+	}
+}
+
+func TestRedBlackTree_DeleteFixup_2(t *testing.T) {
+	// Test 1: x is the right child of its parent
+	tree := NewRedBlackTree[int, int]()
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+	deleted := tree.Delete(2)
+	if !deleted || tree.Size() != 2 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 2)
+	}
+
+	// Test 2: w is a red node
+	tree = NewRedBlackTree[int, int]()
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+	tree.Insert(4, 400)
+	tree.Insert(5, 500)
+	deleted = tree.Delete(3)
+	if !deleted || tree.Size() != 4 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 4)
+	}
+
+	// Test 3: w's right child is a black node
+	tree = NewRedBlackTree[int, int]()
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+	tree.Insert(4, 400)
+	tree.Insert(5, 500)
+	tree.Insert(6, 600)
+	deleted = tree.Delete(5)
+	if !deleted || tree.Size() != 5 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 5)
+	}
+}
+
+func TestRedBlackTree_DeleteFixup_3(t *testing.T) {
+	tree := NewRedBlackTree[int, int]()
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+	deleted := tree.Delete(2)
+	if !deleted || tree.Size() != 2 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 2)
+	}
+}
+
+func TestRedBlackTree_DeleteFixup_4(t *testing.T) {
+	tree := NewRedBlackTree[int, bool]()
+	tree.Insert(10, false)
+	tree.Insert(5, false)
+	tree.Insert(15, false)
+	tree.Insert(2, false)
+	tree.Insert(7, false)
+	tree.Insert(12, false)
+	tree.Insert(18, false)
+	deleted := tree.Delete(5)
+	if !deleted || tree.Size() != 6 {
+		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 6)
+	}
+}
