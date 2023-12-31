@@ -412,3 +412,19 @@ func (x *RedBlackNode[K, V]) rangeHelper(low K, high K, nilNode *RedBlackNode[K,
 		x.right.rangeHelper(low, high, nilNode, result)
 	}
 }
+
+func (t *RedBlackTree[K, V]) Entries() []collections.Pair[K, V] {
+	var result []collections.Pair[K, V]
+	t.root.entriesHelper(t.nil, &result)
+	return result
+}
+
+func (x *RedBlackNode[K, V]) entriesHelper(nilNode *RedBlackNode[K, V], result *[]collections.Pair[K, V]) {
+	if x == nilNode {
+		return
+	}
+
+	x.left.entriesHelper(nilNode, result)
+	*result = append(*result, collections.Pair[K, V]{Key: x.key, Value: x.value})
+	x.right.entriesHelper(nilNode, result)
+}

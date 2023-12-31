@@ -165,7 +165,6 @@ func TestRedBlackTree_Height(t *testing.T) {
 	// Define a function to be tested with random inputs
 	// Using uint8 to use small numbers for testing
 	testHeight := func(n uint8) bool {
-		// Warning: Sometimes this fails when n = 0xff (255)
 		tree := NewRedBlackTree[int, int]()
 
 		// Insert n nodes
@@ -178,13 +177,14 @@ func TestRedBlackTree_Height(t *testing.T) {
 
 		// The height of a Red-Black Tree with n nodes is always less than or equal to 2*log2(n+1)
 		// This is a property of Red-Black Trees
-		maxHeight := 2 * int(math.Log2(float64(n+1)))
+		// Note: uint16 is used to avoid overflow on n since it's a uint8 and adding 1 will overflow
+		maxHeight := 2 * int(math.Log2(float64(uint16(n)+1)))
 
 		return height <= maxHeight
 	}
 
 	// Run the quick check test
-	if err := quick.Check(testHeight, &quick.Config{MaxCount: 50}); err != nil {
+	if err := quick.Check(testHeight, &quick.Config{MaxCount: 100}); err != nil {
 		t.Error(err)
 	}
 }
@@ -246,5 +246,56 @@ func TestRedBlackTree_RangeOutsideBounds(t *testing.T) {
 	pairs := tree.Range(6, 10)
 	if len(pairs) != 0 {
 		t.Errorf("Range() = %v, want %v", len(pairs), 0)
+	}
+}
+
+func TestRedBlackTree_Entries(t *testing.T) {
+	tree := NewRedBlackTree[int, int]()
+	tree.Insert(1, 100)
+	tree.Insert(2, 200)
+	tree.Insert(3, 300)
+
+	entries := tree.Entries()
+	if len(entries) != 3 {
+		t.Errorf("Entries() = %v, want %v", len(entries), 3)
+	}
+
+	if entries[0].Key != 1 || entries[0].Value != 100 {
+		t.Errorf("Entries() = %v, %v, want %v, %v", entries[0].Key, entries[0].Value, 1, 100)
+	}
+
+	if entries[1].Key != 2 || entries[1].Value != 200 {
+		t.Errorf("Entries() = %v, %v, want %v, %v", entries[1].Key, entries[1].Value, 2, 200)
+	}
+
+	if entries[2].Key != 3 || entries[2].Value != 300 {
+		t.Errorf("Entries() = %v, %v, want %v, %v", entries[2].Key, entries[2].Value, 3, 300)
+	}
+}
+
+func TestRedBlackTree_EntriesAreSorted(t *testing.T) {
+	f := func(xs []int) bool {
+		tree := NewRedBlackTree[int, int]()
+		for _, x := range xs {
+			tree.Insert(x, x*100)
+		}
+		entries := tree.Entries()
+
+		// Check if the length of entries is correct
+		if len(entries) != tree.Size() {
+			return false
+		}
+
+		// Check if the entries are sorted
+		for i := 0; i < len(entries)-1; i++ {
+			if entries[i].Key > entries[i+1].Key {
+				return false
+			}
+		}
+
+		return true
+	}
+	if err := quick.Check(f, &quick.Config{MaxCount: 100}); err != nil {
+		t.Error(err)
 	}
 }
