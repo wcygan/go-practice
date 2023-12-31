@@ -7,6 +7,7 @@ import (
 )
 
 func TestNewRedBlackTree(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	if tree == nil {
 		t.Error("NewRedBlackTree() should not return nil")
@@ -14,6 +15,7 @@ func TestNewRedBlackTree(t *testing.T) {
 }
 
 func TestRedBlackTree_Insert(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	if tree.Size() != 1 {
@@ -22,6 +24,7 @@ func TestRedBlackTree_Insert(t *testing.T) {
 }
 
 func TestRedBlackTree_IgnoreDuplicateKeys(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	tree.Insert(1, 200)
@@ -35,6 +38,7 @@ func TestRedBlackTree_IgnoreDuplicateKeys(t *testing.T) {
 }
 
 func TestRedBlackTree_InsertSamePair(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	for i := 0; i < 100; i++ {
 		tree.Insert(1, 100)
@@ -45,6 +49,7 @@ func TestRedBlackTree_InsertSamePair(t *testing.T) {
 }
 
 func TestRedBlackTree_Search(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	value, found := tree.Search(1)
@@ -54,6 +59,7 @@ func TestRedBlackTree_Search(t *testing.T) {
 }
 
 func TestRedBlackTree_Delete(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	tree.Delete(1)
@@ -63,6 +69,7 @@ func TestRedBlackTree_Delete(t *testing.T) {
 }
 
 func TestRedBlackTree_IsEmpty(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	if !tree.IsEmpty() {
 		t.Errorf("IsEmpty() = %v, want %v", tree.IsEmpty(), true)
@@ -70,6 +77,7 @@ func TestRedBlackTree_IsEmpty(t *testing.T) {
 }
 
 func TestRedBlackTree_Minimum(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(5, 500)
 	tree.Insert(3, 300)
@@ -83,6 +91,7 @@ func TestRedBlackTree_Minimum(t *testing.T) {
 }
 
 func TestRedBlackTree_Maximum(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(5, 500)
 	tree.Insert(3, 300)
@@ -96,6 +105,7 @@ func TestRedBlackTree_Maximum(t *testing.T) {
 }
 
 func TestRedBlackTree_InsertNonExistentKey(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	inserted := tree.Insert(1, 100)
 	if !inserted || tree.Size() != 1 {
@@ -104,6 +114,7 @@ func TestRedBlackTree_InsertNonExistentKey(t *testing.T) {
 }
 
 func TestRedBlackTree_InsertExistingKey(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	inserted := tree.Insert(1, 200)
@@ -113,6 +124,7 @@ func TestRedBlackTree_InsertExistingKey(t *testing.T) {
 }
 
 func TestRedBlackTree_SearchNonExistentKey(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	_, found := tree.Search(1)
 	if found {
@@ -121,6 +133,7 @@ func TestRedBlackTree_SearchNonExistentKey(t *testing.T) {
 }
 
 func TestRedBlackTree_SearchExistingKey(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	_, found := tree.Search(1)
@@ -130,6 +143,7 @@ func TestRedBlackTree_SearchExistingKey(t *testing.T) {
 }
 
 func TestRedBlackTree_DeleteNonExistentKey(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	deleted := tree.Delete(1)
 	if deleted {
@@ -138,6 +152,7 @@ func TestRedBlackTree_DeleteNonExistentKey(t *testing.T) {
 }
 
 func TestRedBlackTree_DeleteExistingKey(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	deleted := tree.Delete(1)
@@ -147,6 +162,7 @@ func TestRedBlackTree_DeleteExistingKey(t *testing.T) {
 }
 
 func TestRedBlackTree_HeightOfEmptyTree(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	if height := tree.Height(); height != 0 {
 		t.Errorf("Height() = %v, want %v", height, 0)
@@ -154,6 +170,7 @@ func TestRedBlackTree_HeightOfEmptyTree(t *testing.T) {
 }
 
 func TestRedBlackTree_HeightOfNonEmptyTree(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	if height := tree.Height(); height != 1 {
@@ -162,6 +179,7 @@ func TestRedBlackTree_HeightOfNonEmptyTree(t *testing.T) {
 }
 
 func TestRedBlackTree_Height(t *testing.T) {
+	t.Parallel()
 	// Define a function to be tested with random inputs
 	// Using uint8 to use small numbers for testing
 	testHeight := func(n uint8) bool {
@@ -190,6 +208,7 @@ func TestRedBlackTree_Height(t *testing.T) {
 }
 
 func TestRedBlackTree_SizeAfterInsertAndDelete(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	tree.Insert(2, 200)
@@ -205,6 +224,7 @@ func TestRedBlackTree_SizeAfterInsertAndDelete(t *testing.T) {
 }
 
 func TestRedBlackTree_Range(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	tree.Insert(2, 200)
@@ -228,6 +248,7 @@ func TestRedBlackTree_Range(t *testing.T) {
 }
 
 func TestRedBlackTree_RangeEmptyTree(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	pairs := tree.Range(1, 5)
 	if len(pairs) != 0 {
@@ -236,6 +257,7 @@ func TestRedBlackTree_RangeEmptyTree(t *testing.T) {
 }
 
 func TestRedBlackTree_RangeOutsideBounds(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	tree.Insert(2, 200)
@@ -250,6 +272,7 @@ func TestRedBlackTree_RangeOutsideBounds(t *testing.T) {
 }
 
 func TestRedBlackTree_Entries(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	tree.Insert(2, 200)
@@ -274,6 +297,7 @@ func TestRedBlackTree_Entries(t *testing.T) {
 }
 
 func TestRedBlackTree_EntriesAreSorted(t *testing.T) {
+	t.Parallel()
 	f := func(xs []int) bool {
 		tree := NewRedBlackTree[int, int]()
 		for _, x := range xs {
@@ -301,6 +325,7 @@ func TestRedBlackTree_EntriesAreSorted(t *testing.T) {
 }
 
 func TestRedBlackTree_DeleteFixup_1(t *testing.T) {
+	t.Parallel()
 	// Test 1: Delete a node from an empty tree
 	tree := NewRedBlackTree[int, int]()
 	deleted := tree.Delete(1)
@@ -354,6 +379,7 @@ func TestRedBlackTree_DeleteFixup_1(t *testing.T) {
 }
 
 func TestRedBlackTree_DeleteFixup_2(t *testing.T) {
+	t.Parallel()
 	// Test 1: x is the right child of its parent
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
@@ -391,6 +417,7 @@ func TestRedBlackTree_DeleteFixup_2(t *testing.T) {
 }
 
 func TestRedBlackTree_DeleteFixup_3(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, int]()
 	tree.Insert(1, 100)
 	tree.Insert(2, 200)
@@ -402,6 +429,7 @@ func TestRedBlackTree_DeleteFixup_3(t *testing.T) {
 }
 
 func TestRedBlackTree_DeleteFixup_4(t *testing.T) {
+	t.Parallel()
 	tree := NewRedBlackTree[int, bool]()
 	tree.Insert(10, false)
 	tree.Insert(5, false)

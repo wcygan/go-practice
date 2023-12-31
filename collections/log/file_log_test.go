@@ -24,6 +24,7 @@ func CreateFileLog(t *testing.T) (*FileLog, func()) {
 }
 
 func TestHappyPath(t *testing.T) {
+	t.Parallel()
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 
@@ -50,6 +51,7 @@ func TestHappyPath(t *testing.T) {
 }
 
 func TestReadReturnsCorrectData(t *testing.T) {
+	t.Parallel()
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 
@@ -70,6 +72,7 @@ func TestReadReturnsCorrectData(t *testing.T) {
 }
 
 func TestCloseClosesFile(t *testing.T) {
+	t.Parallel()
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 
@@ -83,6 +86,7 @@ func TestCloseClosesFile(t *testing.T) {
 }
 
 func TestAppendAfterCloseReturnsError(t *testing.T) {
+	t.Parallel()
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 
@@ -97,6 +101,7 @@ func TestAppendAfterCloseReturnsError(t *testing.T) {
 }
 
 func TestReadAfterCloseReturnsError(t *testing.T) {
+	t.Parallel()
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 
@@ -111,6 +116,7 @@ func TestReadAfterCloseReturnsError(t *testing.T) {
 }
 
 func TestReadWithInvalidOffsetReturnsError(t *testing.T) {
+	t.Parallel()
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 
@@ -121,6 +127,7 @@ func TestReadWithInvalidOffsetReturnsError(t *testing.T) {
 }
 
 func TestReadAtInvalidOffsets(t *testing.T) {
+	t.Parallel()
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 
@@ -148,6 +155,7 @@ func TestReadAtInvalidOffsets(t *testing.T) {
 }
 
 func TestMultipleEntries(t *testing.T) {
+	t.Parallel()
 	log, cleanup := CreateFileLog(t)
 	defer cleanup()
 

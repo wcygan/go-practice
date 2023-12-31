@@ -5,6 +5,7 @@ import (
 )
 
 func TestNewBloomFilter(t *testing.T) {
+	t.Parallel()
 	bf := NewBloomFilter(10, 2)
 	if len(bf.bitSet) != 10 {
 		t.Errorf("Expected bitSet length of 10, got %d", len(bf.bitSet))
@@ -15,6 +16,7 @@ func TestNewBloomFilter(t *testing.T) {
 }
 
 func TestAddAndCheck(t *testing.T) {
+	t.Parallel()
 	bf := NewBloomFilter(100, 2)
 	item := []byte("test")
 	bf.Add(item)
@@ -24,6 +26,7 @@ func TestAddAndCheck(t *testing.T) {
 }
 
 func TestCheckNonExistentItem(t *testing.T) {
+	t.Parallel()
 	bf := NewBloomFilter(100, 2)
 	item := []byte("test")
 	if bf.Check(item) {
@@ -32,6 +35,7 @@ func TestCheckNonExistentItem(t *testing.T) {
 }
 
 func TestAddMultipleItems(t *testing.T) {
+	t.Parallel()
 	bf := NewBloomFilter(100, 2)
 	items := [][]byte{
 		[]byte("item1"),
@@ -49,6 +53,7 @@ func TestAddMultipleItems(t *testing.T) {
 }
 
 func TestFalsePositive(t *testing.T) {
+	t.Parallel()
 	bf := NewBloomFilter(10, 2)
 	item1 := []byte("item1")
 	item2 := []byte("item2")

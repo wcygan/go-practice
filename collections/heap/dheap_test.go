@@ -5,6 +5,7 @@ import (
 )
 
 func TestNewDHeap(t *testing.T) {
+	t.Parallel()
 	h := NewDHeap(3)
 	if h.degree != 3 {
 		t.Errorf("Expected degree to be 3, got %d", h.degree)
@@ -15,6 +16,7 @@ func TestNewDHeap(t *testing.T) {
 }
 
 func TestInsertAndExtractMax(t *testing.T) {
+	t.Parallel()
 	h := NewDHeap(3)
 	h.Insert(5)
 	h.Insert(10)
@@ -37,6 +39,7 @@ func TestInsertAndExtractMax(t *testing.T) {
 }
 
 func TestExtractMaxFromEmptyHeap(t *testing.T) {
+	t.Parallel()
 	h := NewDHeap(3)
 	_, ok := h.ExtractMax()
 	if ok {
@@ -45,6 +48,7 @@ func TestExtractMaxFromEmptyHeap(t *testing.T) {
 }
 
 func TestBubbleUpAndDown(t *testing.T) {
+	t.Parallel()
 	h := NewDHeap(3)
 	h.Insert(5)
 	h.Insert(10)

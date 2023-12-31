@@ -8,6 +8,7 @@ import (
 )
 
 func TestPutAndGet(t *testing.T) {
+	t.Parallel()
 	dir, _ := os.MkdirTemp("", "wal")
 	defer os.RemoveAll(dir)
 
@@ -28,6 +29,7 @@ func TestPutAndGet(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
+	t.Parallel()
 	dir, _ := os.MkdirTemp("", "wal")
 	defer os.RemoveAll(dir)
 
@@ -53,6 +55,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestGetNonExistentKey(t *testing.T) {
+	t.Parallel()
 	dir, _ := os.MkdirTemp("", "wal")
 	defer os.RemoveAll(dir)
 
@@ -69,6 +72,7 @@ func TestGetNonExistentKey(t *testing.T) {
 }
 
 func TestPutAndGetAfterReopen(t *testing.T) {
+	t.Parallel()
 	dir, _ := os.MkdirTemp("", "wal")
 	defer os.RemoveAll(dir)
 
@@ -103,6 +107,7 @@ func TestPutAndGetAfterReopen(t *testing.T) {
 }
 
 func TestWriteMultipleRecordsAndReopen(t *testing.T) {
+	t.Parallel()
 	dir, _ := os.MkdirTemp("", "wal")
 	defer os.RemoveAll(dir)
 
