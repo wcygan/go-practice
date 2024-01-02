@@ -443,3 +443,42 @@ func TestRedBlackTree_DeleteFixup_4(t *testing.T) {
 		t.Errorf("Delete() = %v, Size() = %v, want %v, %v", deleted, tree.Size(), true, 6)
 	}
 }
+
+func TestRedBlackTree_ExtremeTest(t *testing.T) {
+	tree := NewRedBlackTree[int, int]()
+
+	// Insert the numbers 1-100 into the tree
+	for i := 1; i <= 100; i++ {
+		tree.Insert(i, i)
+	}
+
+	// Assert the size of the tree
+	if tree.Size() != 100 {
+		t.Errorf("Size() = %v, want %v", tree.Size(), 100)
+	}
+
+	// Assert the height of the tree
+	height := tree.Height()
+	if height > 2*int(math.Log2(float64(101))) {
+		t.Errorf("Height() = %v, want less than or equal to %v", height, 2*math.Log2(101))
+	}
+
+	// Delete the numbers 1-25 from the tree and assert properties after each deletion
+	for value := 1; value <= 25; value++ {
+		deleted := tree.Delete(value)
+		if !deleted {
+			t.Errorf("Delete() = %v, want %v", deleted, true)
+		}
+
+		// Assert the size of the tree
+		if tree.Size() != 100-value {
+			t.Errorf("Size() = %v, want %v", tree.Size(), 100-value)
+		}
+
+		// Assert the height of the tree
+		height := tree.Height()
+		if height > 2*int(math.Log2(float64(100-value+1))) {
+			t.Errorf("Height() = %v, want less than or equal to %v", height, 2*math.Log2(float64(100-value+1)))
+		}
+	}
+}

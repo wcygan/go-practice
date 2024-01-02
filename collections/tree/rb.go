@@ -334,18 +334,20 @@ func (t *RedBlackTree[K, V]) deleteFixup(x *RedBlackNode[K, V]) {
 			if w.left.color == BLACK && w.right.color == BLACK {
 				w.color = RED
 				x = x.parent
-			} else if w.right.color == BLACK {
-				w.left.color = BLACK
-				w.color = RED
-				t.rotateRight(w)
-				w = x.parent.right
-			}
+			} else {
+				if w.right.color == BLACK {
+					w.left.color = BLACK
+					w.color = RED
+					t.rotateRight(w)
+					w = x.parent.right
+				}
 
-			w.color = x.parent.color
-			x.parent.color = BLACK
-			w.right.color = BLACK
-			t.rotateLeft(x.parent)
-			x = t.root
+				w.color = x.parent.color
+				x.parent.color = BLACK
+				w.right.color = BLACK
+				t.rotateLeft(x.parent)
+				x = t.root
+			}
 		} else {
 			w := x.parent.left
 			if w.color == RED {
@@ -358,18 +360,19 @@ func (t *RedBlackTree[K, V]) deleteFixup(x *RedBlackNode[K, V]) {
 			if w.right.color == BLACK && w.left.color == BLACK {
 				w.color = RED
 				x = x.parent
-			} else if w.left.color == BLACK {
-				w.right.color = BLACK
-				w.color = RED
-				t.rotateLeft(w)
-				w = x.parent.left
+			} else {
+				if w.left.color == BLACK {
+					w.right.color = BLACK
+					w.color = RED
+					t.rotateLeft(w)
+					w = x.parent.left
+				}
+				w.color = x.parent.color
+				x.parent.color = BLACK
+				w.left.color = BLACK
+				t.rotateRight(x.parent)
+				x = t.root
 			}
-
-			w.color = x.parent.color
-			x.parent.color = BLACK
-			w.left.color = BLACK
-			t.rotateRight(x.parent)
-			x = t.root
 		}
 	}
 
